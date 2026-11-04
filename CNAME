@@ -1,6 +1,1 @@
-git clone https://github.com/vaishnav70/placementfinder.git
-cd placementfinder
-git rm index.html
-git mv vishitalenthub.html index.html
-git commit -m "Replace index.html with full VishiTalentHub site"
-git push origin main
+www.vishitalenthub.in
