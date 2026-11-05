@@ -6,6 +6,22 @@
 <meta name="color-scheme" content="light dark" />
 <link rel="icon" href="data:," />
 <title>VishiTalentHub — Student work, internships & freelance gigs</title>
+<meta name="description" content="VishiTalentHub is the student listing board for internships, part-time roles and freelance gigs — pay shown upfront, owner-verified listings, free to apply, and trackable support on WhatsApp." />
+<!-- WhatsApp / social link previews (Open Graph) — the preview image is a real hosted file on the site's own domain, never a data URI -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="VishiTalentHub" />
+<meta property="og:title" content="VishiTalentHub — Student work, internships & freelance gigs" />
+<meta property="og:description" content="Student internships, part-time roles and freelance gigs with pay shown upfront. Browse free, apply free, and get tracked support on WhatsApp." />
+<meta property="og:url" content="https://www.vishitalenthub.in/" />
+<meta property="og:image" content="https://www.vishitalenthub.in/assets/og-cover.jpg" />
+<meta property="og:image:type" content="image/jpeg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content="Students working together on laptops in a college library" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="VishiTalentHub — Student work, internships & freelance gigs" />
+<meta name="twitter:description" content="Student internships, part-time roles and freelance gigs with pay shown upfront. Browse free, apply free, and get tracked support on WhatsApp." />
+<meta name="twitter:image" content="https://www.vishitalenthub.in/assets/og-cover.jpg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@500&display=swap" rel="stylesheet" />
@@ -459,6 +475,39 @@ select.status-sel{border:1px solid var(--line);border-radius:8px;padding:8px 9px
   .confetti{display:none}
   .skel::after{display:none}
 }
+
+/* ---------- closed listings / report / withdraw / resume save / owner stats ---------- */
+.badge.b-closed{background:#3A4356;color:#fff;letter-spacing:.06em}
+.job.is-closed .cover img{filter:grayscale(.55);opacity:.82}
+.job.is-closed h3 a{color:var(--muted)}
+.btn[disabled]{opacity:.55;cursor:not-allowed;transform:none !important}
+.report-link{background:none;border:0;color:var(--muted);font-size:12.5px;font-weight:700;padding:4px 2px;display:inline-flex;align-items:center;gap:5px}
+.report-link:hover{color:var(--heart);text-decoration:underline}
+.report-link svg{width:13px;height:13px;fill:currentColor;flex:none}
+.report-box{display:none;background:var(--bg-alt);border:1px solid var(--line);border-radius:10px;padding:14px;margin-top:14px}
+.report-box.open{display:block}
+.report-box h4{margin:0 0 4px !important}
+.report-box .hint{color:var(--muted);font-size:13.5px;margin:0 0 12px}
+.app-detail{flex-basis:100%;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:13.5px;color:var(--body);display:none}
+.app-detail.open{display:block}
+.app-detail b{color:var(--ink)}
+.app-detail .ad-row{margin:2px 0;overflow-wrap:anywhere}
+.status.withdrawn{background:var(--surface-2);color:var(--muted);border:1px solid var(--line)}
+.wd-confirm{display:none;gap:8px;align-items:center;flex-wrap:wrap;flex-basis:100%;font-size:13.5px;color:var(--body)}
+.wd-confirm.open{display:flex}
+.rb-saved-bar{display:none;align-items:center;gap:10px;flex-wrap:wrap;background:var(--teal-soft);border:1px solid var(--line);border-radius:10px;padding:11px 13px;margin-bottom:16px;font-size:14px}
+.rb-saved-bar.show{display:flex}
+.rb-saved-bar b{color:var(--ink)}
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:6px}
+.stat-box{background:var(--bg-alt);border:1px solid var(--line);border-radius:10px;padding:13px 14px}
+.stat-box h4{margin:0 0 8px;font-size:13px;font-family:"Poppins",sans-serif;color:var(--ink);letter-spacing:.02em}
+.stat-box .srow{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:3px 0;border-top:1px dashed var(--line)}
+.stat-box .srow:first-of-type{border-top:0}
+.stat-box .srow span{color:var(--body);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.stat-box .srow b{color:var(--ink);font-family:"DM Mono",monospace;font-size:13px;flex:none}
+.stat-box .snone{font-size:13px;color:var(--muted)}
+@media(max-width:1020px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.stat-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -549,10 +598,11 @@ select.status-sel{border:1px solid var(--line);border-radius:8px;padding:8px 9px
           <option value="rating">Top rated posters</option>
           <option value="pay-high">Pay: high to low</option>
           <option value="pay-low">Pay: low to high</option>
-          <option value="deadline">Closing soon</option>
+          <option value="deadline">Closing soonest first</option>
           <option value="match">Best match for me</option>
         </select>
         <button type="button" class="chip" id="savedToggle" aria-pressed="false">♥ Saved only</button>
+        <button type="button" class="chip" id="closedToggle" aria-pressed="false">Hide closed</button>
         <span class="res" id="resCount"></span>
       </div>
       <div class="jobs" id="jobGrid" aria-busy="true">
@@ -616,7 +666,11 @@ select.status-sel{border:1px solid var(--line);border-radius:8px;padding:8px 9px
         <div class="rb-perks">
           <div class="check"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1E4A7A"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><div><p><b style="color:var(--ink)">Made for students</b> — sections for projects, internships, certifications and achievements, so it works even with no job experience yet. Leave the summary blank and the builder drafts one from your answers.</p></div></div>
           <div class="check"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1E4A7A"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><div><p><b style="color:var(--ink)">Yours to keep</b> — download the finished resume as a file, or copy it as text into any application form. Applied for a listing here before? Your name, contact and college are filled in for you.</p></div></div>
-          <div class="check"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1E4A7A"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><div><p><b style="color:var(--ink)">Private by design</b> — your answers stay in this browser tab while you build. Nothing is uploaded or stored anywhere.</p></div></div>
+          <div class="check"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="11" fill="#1E4A7A"/><path d="M7 12.5l3.2 3.2L17 9" stroke="#fff" stroke-width="2.4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><div><p><b style="color:var(--ink)">Saved in your browser</b> — your answers are kept in this browser on this device, so closing the tab doesn't lose them. A saved resume auto-fills your future applications here and powers your match scores — and you can clear it anytime. Nothing is uploaded anywhere.</p></div></div>
+        </div>
+        <div class="rb-saved-bar" id="rbSavedBar">
+          <span>💾 <b>Resume saved in this browser.</b> It auto-fills your applications and powers your match scores.</span>
+          <button class="btn btn-ghost btn-sm" type="button" id="rbClearBtn1">Clear saved resume</button>
         </div>
         <button class="btn btn-green" type="button" id="rbStartBtn">Start building my resume</button>
       </div>
@@ -718,12 +772,13 @@ select.status-sel{border:1px solid var(--line);border-radius:8px;padding:8px 9px
       <div id="rbResult" style="display:none">
         <div class="panel">
           <h3>Your resume is ready 🎉</h3>
-          <p class="hint">This is exactly how it looks below. Download it as a file — open the file in any browser to print it or save it as a PDF — or copy it as text to paste into an application. Spot a typo? Edit your answers and rebuild; it takes seconds.</p>
+          <p class="hint">This is exactly how it looks below. Download it as a file — open the file in any browser to print it or save it as a PDF — or copy it as text to paste into an application. Spot a typo? Edit your answers and rebuild; it takes seconds. Your answers are saved in this browser, so the resume also auto-fills your future applications here.</p>
           <div class="rb-actions">
             <button class="btn btn-green" type="button" id="rbDownloadBtn">Download resume</button>
             <button class="btn btn-ghost" type="button" id="rbCopyBtn">Copy as text</button>
             <button class="btn btn-ghost" type="button" id="rbEditBtn">Edit answers</button>
             <button class="btn btn-ghost" type="button" id="rbRestartBtn">Start over</button>
+            <button class="btn btn-ghost" type="button" id="rbClearBtn2">Clear saved resume</button>
           </div>
         </div>
         <div class="rb-sheet" id="rbSheet" style="margin-top:16px"></div>
@@ -763,7 +818,7 @@ select.status-sel{border:1px solid var(--line);border-radius:8px;padding:8px 9px
         <div id="activity">
           <div class="panel" style="margin-bottom:16px">
             <h3>My applications</h3>
-            <p class="hint">Applications you submit on this device, this visit — with their live status: Applied → Under review → Shortlisted → Selected.</p>
+            <p class="hint">Applications you submit on this device, this visit — with their live status: Applied → Under review → Shortlisted → Selected. Tap “What I sent” to re-read exactly what you submitted, or withdraw an application you no longer want considered.</p>
             <div class="act-list" id="appList"><div class="act-empty">No applications yet — open any listing above and hit <b>Apply now</b>.</div></div>
           </div>
           <div class="panel" style="margin-bottom:16px">
@@ -951,6 +1006,17 @@ alter publication supabase_realtime add table public.stories;</pre>
       </div>
 
       <div id="ownerDash" style="display:none;margin-top:16px">
+        <div class="panel" style="margin-bottom:16px">
+          <h3>Board stats — real counts only</h3>
+          <p class="hint">Counted live from the site's actual records — applications and listings from the shared database, plus this device's own saves and detail views (labelled as such, since saves and views aren't stored centrally). Nothing here is estimated.</p>
+          <div class="stat-grid">
+            <div class="stat-box"><h4>Applications per listing</h4><div id="statAppsPer"><span class="snone">Loading…</span></div></div>
+            <div class="stat-box"><h4>Saves per listing · this device</h4><div id="statSavesPer"><span class="snone">Loading…</span></div></div>
+            <div class="stat-box"><h4>Applications by category</h4><div id="statCats"><span class="snone">Loading…</span></div></div>
+            <div class="stat-box"><h4>Detail views · this device</h4><div id="statViewsPer"><span class="snone">No listing opened on this device yet.</span></div></div>
+          </div>
+          <p class="dash-note" id="statNote"></p>
+        </div>
         <div class="two-col">
           <div class="panel">
             <h3>Post new work</h3>
@@ -1034,6 +1100,17 @@ create policy "owner manages stories" on public.stories
 
 alter publication supabase_realtime add table public.stories;</pre>
           </details>
+          <details class="rules-box">
+            <summary>Withdrawal sync SQL — let students withdraw their own applications (run once)</summary>
+            <pre class="rules">-- VishiTalentHub withdrawal sync — run once in Supabase: SQL Editor → New query → Run
+-- Lets a signed-in student set ONLY their own application's status to
+-- 'Withdrawn'. Anonymous (not signed-in) applications are withdrawn on
+-- the student's device; the owner still sees every withdrawal there.
+
+create policy "students withdraw own applications" on public.applications
+  for update using (user_id = auth.uid())
+  with check (user_id = auth.uid() and status = 'Withdrawn');</pre>
+          </details>
         </div>
       </div>
     </section>
@@ -1047,8 +1124,10 @@ alter publication supabase_realtime add table public.stories;</pre>
       <details><summary>How and when do I get paid?</summary><p>The organisation that posted the work pays you directly — the amount, date and mode (UPI or bank transfer) should be agreed in writing before you start. If a payment goes wrong, raise an issue in the chat: you'll get a token the owner can track.</p></details>
       <details><summary>How do poster ratings and tiers work?</summary><p>After a gig finishes, students rate the poster. The average shows as stars on every listing, and posters earn tiers — New, Established, Top Poster — from their rating and completed gigs. Ratings on the current sample listings are examples.</p></details>
       <details><summary>Can I post work for my shop, startup or society?</summary><p>No — visitors cannot post work on this site. Only the VishiTalentHub owner can publish listings, from the owner dashboard after signing in with their owner account — there is no public posting form. If you have work to offer, contact the owner via Chat Support / WhatsApp with the details; if approved, the owner will post it for you.</p></details>
-      <details><summary>How does the Resume Builder work?</summary><p>Open <b>Resume Builder</b> in the menu and tap “Start building my resume”. It asks a few short questions in six small steps — about you, the role you're aiming for, your skills, education, experience/projects and extras like certifications. At the end you get a clean one-page resume on screen: download it as a file (open it in any browser to print or save as PDF) or copy it as text into any application form. It's free, needs no sign-up, and your answers stay in your browser tab — nothing is uploaded. If you've already applied for a listing here, your name, contact and college are filled in for you.</p></details>
+      <details><summary>How does the Resume Builder work?</summary><p>Open <b>Resume Builder</b> in the menu and tap “Start building my resume”. It asks a few short questions in six small steps — about you, the role you're aiming for, your skills, education, experience/projects and extras like certifications. At the end you get a clean one-page resume on screen: download it as a file (open it in any browser to print or save as PDF) or copy it as text into any application form. It's free, needs no sign-up, and your answers are saved in this browser on this device only — nothing is uploaded — so a saved resume auto-fills your future applications here and powers your match scores. “Clear saved resume” in the builder removes it anytime. If you've already applied for a listing here, your name, contact and college are filled in for you.</p></details>
       <details><summary>How do I track my application?</summary><p>Every application shows a live status under <b>My applications</b>: <b>Applied → Under review → Shortlisted → Selected</b>. The owner moves it along as they review, so you can watch it progress instead of waiting in the dark. You can also type your application reference (like <span class="mono">VTH-APP-7K2Q</span>) into the chat assistant for its current status.</p></details>
+      <details><summary>What happens when a listing's deadline passes?</summary><p>The listing closes itself: it stays on the board clearly marked <b>Closed</b>, the Apply button switches off, and it stops accepting applications — nobody can apply to a dead gig. Use the “Hide closed” filter above the board to skip closed listings. Saved a listing that later closed? Its deadline reminder simply stops.</p></details>
+      <details><summary>How do I report a listing, or withdraw an application?</summary><p>Every listing card and detail view has a <b>⚑ Report</b> button. Reporting raises a support ticket to the owner — the same ticket system as the chat tokens — with the listing reference attached, and you get a ticket ref (like <span class="mono">VTH-XXXXXX</span>) you can track under “My support tokens”. To withdraw, open <b>My applications</b>: each application has a “What I sent” view so you can re-read exactly what you submitted, and a <b>Withdraw</b> button (with a confirm step). Withdrawn applications show as Withdrawn and no longer count toward the listing's applied total.</p></details>
       <details><summary>What does the “% match” on a listing mean?</summary><p>Once you've built a resume with the <b>Resume Builder</b>, each listing shows a match score based on how its required skills line up with the skills and tools on your resume. It's a guide to where you fit best — not a guarantee — and you can attach that same resume to your application in one tap from the apply form.</p></details>
       <details><summary>Can I get alerts for new gigs and deadlines?</summary><p>Yes — in <b>My Activity → Alerts &amp; reminders</b>, pick a category and tap “Notify me”: new gigs in that category pop up there with a toast while you browse. Listings you've saved or applied to also get automatic deadline reminders there when they're within 3 days of closing.</p></details>
       <details><summary>How does the support token system work?</summary><p>Choose “Raise an issue” in the chat, answer three quick questions, and you get a token like <span class="mono">VTH-8K2Q4Z</span>. The “Continue on WhatsApp” button then opens a chat to the hub owner with your token and issue pre-written — quote the token in any follow-up so your case is easy to find.</p></details>
@@ -1234,7 +1313,7 @@ var REVIEWS = [
  {stars:5,text:"“My stipend was delayed once — I raised an issue in the chat, got a token, and the owner sorted it on WhatsApp the same evening. That tracking really works.”",name:"Rahul Verma",role:"Excel assistant gig · B.Com student",color:"#2563A8"}
 ];
 
-var state = { cat:"All", applications:[], tickets:[], appliedIds:{}, saved:{}, savedOnly:false, alerts:{cats:{}, feed:[]}, knownIds:null };
+var state = { cat:"All", applications:[], tickets:[], appliedIds:{}, saved:{}, savedOnly:false, hideClosed:false, alerts:{cats:{}, feed:[]}, knownIds:null };
 var $ = function(id){ return document.getElementById(id); };
 function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
 function inr(n){ return "₹" + Number(n).toLocaleString("en-IN"); }
@@ -1252,7 +1331,7 @@ function tierHtml(j){
 }
 
 /* ---------- categories ---------- */
-function catCount(c){ return c==="All" ? JOBS.length : JOBS.filter(function(j){return j.cat===c;}).length; }
+function catCount(c){ return JOBS.filter(function(j){ return !isClosed(j) && (c==="All" || j.cat===c); }).length; }
 function renderCats(){
   $("catRow").innerHTML = CATEGORIES.map(function(c){
     return '<button class="chip'+(state.cat===c?" on":"")+'" data-cat="'+esc(c)+'">'+esc(c)+' · '+catCount(c)+'</button>';
@@ -1295,6 +1374,30 @@ function closingBadge(j){
   if(du===null || du<0 || du>5) return "";
   return '<span class="badge b-closing">'+(du===0 ? "Closes today" : "Closing soon · "+du+"d left")+'</span>';
 }
+/* A listing whose apply-by date has passed is Closed: it stays on the
+   board, clearly marked, but takes no applications. */
+function isClosed(j){
+  var du = daysUntil(j.deadline);
+  return du !== null && du < 0;
+}
+function closedBadge(j){
+  return isClosed(j) ? '<span class="badge b-closed">CLOSED</span>' : "";
+}
+var FLAG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3a1 1 0 0 1 2 0v1.1c2.4-1.2 4.2-.4 6.1.5 1.7.8 3.4 1.6 5.9.4a1 1 0 0 1 1 .9V13a1 1 0 0 1-1.4.9c-2.4 1.2-4.2.4-6.1-.5-1.5-.7-3-1.4-4.9-.8V21a1 1 0 1 1-2 0V3z"/></svg>';
+function reportLinkHtml(j){
+  return '<button type="button" class="report-link" data-report="'+j.id+'" aria-label="Report the listing: '+esc(j.title)+'">'+FLAG+'Report</button>';
+}
+/* ---------- this-device persistence (browser storage, this device only) ----------
+   Two things live here, both labelled honestly wherever they surface:
+   the student's saved Resume Builder answers, and per-listing detail-view
+   counts used by the owner stats ("this device" views). Nothing is sent
+   to a server from these stores. */
+var LS_RESUME = "vth_resume_v1", LS_VIEWS = "vth_views_v1";
+function lsGet(k){ try { var v = window.localStorage.getItem(k); return v ? JSON.parse(v) : null; } catch(e){ return null; } }
+function lsSet(k, v){ try { window.localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+function lsDel(k){ try { window.localStorage.removeItem(k); } catch(e){} }
+function viewCount(id){ var v = lsGet(LS_VIEWS) || {}; return v[id] || 0; }
+function bumpView(id){ var v = lsGet(LS_VIEWS) || {}; v[id] = (v[id] || 0) + 1; lsSet(LS_VIEWS, v); }
 function waShareUrl(j){
   var text = "Check this gig on VishiTalentHub: "+j.title+" at "+j.org+" — "+inr(j.pay)+" "+j.unit+" ("+j.type+", "+j.loc+"). Applying is free for students: www.vishitalenthub.in";
   return "https://wa.me/?text=" + encodeURIComponent(text);
@@ -1332,6 +1435,7 @@ function renderJobs(){
   var list = JOBS.filter(function(j){
     if(state.cat!=="All" && j.cat!==state.cat) return false;
     if(state.savedOnly && !state.saved[j.id]) return false;
+    if(state.hideClosed && isClosed(j)) return false;
     if(type && j.type!==type) return false;
     if(loc && j.loc!==loc) return false;
     if(budget==="u6" && !(j.pay<6000)) return false;
@@ -1348,15 +1452,26 @@ function renderJobs(){
     if(sort==="pay-low") return a.pay-b.pay;
     if(sort==="rating") return (b.rating||0)-(a.rating||0);
     if(sort==="match") return (matchScore(b)||0)-(matchScore(a)||0);
-    if(sort==="deadline") return String(a.deadline).localeCompare(String(b.deadline));
+    if(sort==="deadline"){
+      /* Closing soonest first: open listings by nearest deadline; ones
+         with no deadline after those; Closed listings always last. */
+      var ca = isClosed(a) ? 1 : 0, cb = isClosed(b) ? 1 : 0;
+      if(ca !== cb) return ca - cb;
+      var da = a.deadline ? daysUntil(a.deadline) : null, db = b.deadline ? daysUntil(b.deadline) : null;
+      if(da === null && db === null) return a.posted - b.posted;
+      if(da === null) return 1;
+      if(db === null) return -1;
+      return da - db;
+    }
     return a.posted-b.posted;
   });
   $("resCount").textContent = list.length + (list.length===1?" listing":" listings");
-  setStatTarget("statJobs", JOBS.length);
+  setStatTarget("statJobs", JOBS.filter(function(j){ return !isClosed(j); }).length);
   /* Applications counter = real application records only. Never sum the
      per-listing "apps" tallies: on sample listings those are example numbers,
-     not applications anyone actually submitted. */
-  setStatTarget("statApps", state.applications.length);
+     not applications anyone actually submitted. Withdrawn applications no
+     longer count either. */
+  setStatTarget("statApps", state.applications.filter(function(a){ return a.status !== "Withdrawn"; }).length);
   /* new-gig alerts: first render just learns the current board; after that,
      a listing that appears in a watched category raises an alert + toast */
   if(state.knownIds===null){
@@ -1383,30 +1498,36 @@ function renderJobs(){
   $("jobGrid").innerHTML = list.map(function(j){
     var applied = state.appliedIds[j.id];
     var saved = !!state.saved[j.id];
-    var ms = matchScore(j);
-    return '<article class="job">'
+    var closed = isClosed(j);
+    var ms = closed ? null : matchScore(j);
+    return '<article class="job'+(closed?" is-closed":"")+'">'
       + '<div class="cover"><img src="'+esc(j.img||CAT_IMGS[j.cat]||CAT_IMGS.Other)+'" alt="'+esc(j.cat)+' work — '+esc(j.title)+'" loading="lazy" />'
       + '<span class="ctype">'+esc(j.type)+' · '+esc(j.loc)+'</span>'
       + '<button type="button" class="save-btn'+(saved?" on":"")+'" data-save="'+j.id+'" aria-pressed="'+(saved?"true":"false")+'" aria-label="'+(saved?"Remove from saved":"Save this listing")+'" title="'+(saved?"Saved":"Save for later")+'">'+HEART+'</button></div>'
       + '<div class="job-body">'
       + '<div class="seller"><div class="avatar" style="background:'+(CAT_COLORS[j.cat]||"#5B6779")+'">'+esc(initials(j.org))+'</div>'
       + '<div><div class="sname">'+esc(j.org)+'</div><div class="smeta">'+tierHtml(j)+(j.sample?'<span class="verified">Sample poster</span>':'<span class="verified">Hub poster</span>')+(j.verified?'<span class="verified-badge">✓ Verified</span>':"")+'</div></div>'
-      + '<div class="badges" style="margin-left:auto">'+(j.sample?'<span class="badge b-sample">SAMPLE</span>':"")+(j.mine?'<span class="badge b-new">OWNER LISTING</span>':"")+closingBadge(j)+'</div></div>'
+      + '<div class="badges" style="margin-left:auto">'+closedBadge(j)+(j.sample?'<span class="badge b-sample">SAMPLE</span>':"")+(j.mine?'<span class="badge b-new">OWNER LISTING</span>':"")+closingBadge(j)+'</div></div>'
       + '<h3><a href="#" data-details="'+j.id+'">'+esc(j.title)+'</a></h3>'
       + ratingHtml(j)
       + (ms!==null ? '<div><span class="match-pill">'+ms+'% match for you</span></div>' : "")
       + '<div class="meta"><span>Duration <b>'+esc(j.dur)+'</b></span><span>Openings <b>'+j.openings+'</b></span><span>'+(j.apps||0)+' applied</span></div>'
       + '<div class="skills">'+j.skills.map(function(s){return '<span class="skill">'+esc(s)+'</span>';}).join("")+'</div>'
       + '<p class="desc">'+esc(j.desc)+'</p>'
-      + '<div class="deadline">Apply by: '+esc(deadlineLabel(j.deadline))+' · Posted '+j.posted+'d ago</div>'
-      + '<div class="job-foot"><button class="btn '+(applied?"btn-ghost":"btn-green")+' btn-sm" data-apply="'+j.id+'">'+(applied?"Applied ✓":"Apply now")+'</button>'
+      + '<div class="deadline">'+(closed ? 'Closed — the apply-by date ('+esc(j.deadline)+') has passed' : 'Apply by: '+esc(deadlineLabel(j.deadline)))+' · Posted '+j.posted+'d ago</div>'
+      + '<div class="job-foot">'
+      + (closed
+          ? '<button class="btn btn-ghost btn-sm" type="button" disabled aria-disabled="true">Closed</button>'
+          : '<button class="btn '+(applied?"btn-ghost":"btn-green")+' btn-sm" data-apply="'+j.id+'">'+(applied?"Applied ✓":"Apply now")+'</button>')
       + '<a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="'+waShareUrl(j)+'" aria-label="Share this listing on WhatsApp">Share</a>'
       + '<div class="price"><small>STARTING AT</small><b>'+inr(j.pay)+'</b> <span>'+esc(j.unit)+'</span></div></div>'
+      + '<div>'+reportLinkHtml(j)+'</div>'
       + '</div></article>';
   }).join("");
   Array.prototype.forEach.call(document.querySelectorAll("[data-details]"),function(b){ b.addEventListener("click",function(e){ e.preventDefault(); openJob(b.getAttribute("data-details"),false); }); });
   Array.prototype.forEach.call(document.querySelectorAll("[data-apply]"),function(b){ b.addEventListener("click",function(){ openJob(b.getAttribute("data-apply"),true); }); });
   Array.prototype.forEach.call(document.querySelectorAll("[data-save]"),function(b){ b.addEventListener("click",function(){ toggleSave(b.getAttribute("data-save")); }); });
+  Array.prototype.forEach.call(document.querySelectorAll("[data-report]"),function(b){ b.addEventListener("click",function(){ openJob(b.getAttribute("data-report"),false,true); }); });
 }
 /* ---------- animated hero counters (real counts only) ---------- */
 var statTargets = {}, statDone = {}, statVisible = false;
@@ -1487,24 +1608,38 @@ function renderStories(){
 
 /* ---------- job modal ---------- */
 var currentJob = null;
-function openJob(id, toApply){
+function openJob(id, toApply, toReport){
   currentJob = JOBS.filter(function(j){return j.id===id;})[0];
   if(!currentJob) return;
   var j = currentJob;
+  bumpView(j.id); /* real detail-opening, counted on this device for the owner stats */
   var applied = state.appliedIds[j.id];
   var saved = !!state.saved[j.id];
+  var closed = isClosed(j);
   var rbd = rbDataOrNull();
   var attachHtml = rbd ? '<div class="attach-row"><button type="button" class="btn btn-green btn-sm" id="attachResumeBtn">📄 Attach my built resume</button><span class="rb-hint">One tap: fills your name, contact and college from your Resume Builder resume and adds the full resume to this application.</span></div>' : "";
+  var reportBox =
+    '<div class="report-box" id="reportBox"><h4>Report this listing</h4>'
+    + '<p class="hint">Your report raises a support ticket to the hub owner — the same system as the chat tokens — with this listing\'s reference attached. You\'ll get a ticket ref to track it under “My support tokens”.</p>'
+    + '<form id="reportForm"><div class="fgrid">'
+    + '<div class="field"><label for="rReason">What\'s wrong?</label><select id="rReason"><option>Asks for a fee / looks like a scam</option><option>Pay or details look wrong</option><option>Listing looks fake or copied</option><option>Contact details misused</option><option>Something else</option></select></div>'
+    + '<div class="field"><label for="rName">Your name (optional)</label><input id="rName" placeholder="So the owner knows who reported" /></div>'
+    + '<div class="field full"><label for="rDetail">Anything the owner should know?</label><textarea id="rDetail" placeholder="Optional — a line or two helps the owner check faster."></textarea></div>'
+    + '</div><button class="btn btn-green" type="submit" style="margin-top:12px">Send report to the owner</button>'
+    + '<div class="form-msg" id="reportMsg" role="status"></div></form></div>';
   $("modalContent").innerHTML =
     '<div class="mcover"><img src="'+esc(j.img||CAT_IMGS[j.cat]||CAT_IMGS.Other)+'" alt="'+esc(j.cat)+' work — '+esc(j.title)+'" /><button class="modal-x" id="modalX" aria-label="Close">✕</button></div>'
-    + '<h3 id="mTitle">'+esc(j.title)+'</h3><div class="org">'+esc(j.org)+' · '+esc(j.cat)+(j.sample?' · <span class="badge b-sample">SAMPLE LISTING</span>':"")+(j.mine?' · <span class="badge b-new">OWNER LISTING</span>':"")+(j.verified?' · <span class="verified-badge">✓ Verified listing</span>':"")+' '+closingBadge(j)+'</div>'
+    + '<h3 id="mTitle">'+esc(j.title)+'</h3><div class="org">'+esc(j.org)+' · '+esc(j.cat)+(j.sample?' · <span class="badge b-sample">SAMPLE LISTING</span>':"")+(j.mine?' · <span class="badge b-new">OWNER LISTING</span>':"")+(j.verified?' · <span class="verified-badge">✓ Verified listing</span>':"")+' '+closingBadge(j)+' '+closedBadge(j)+'</div>'
     + ratingHtml(j)
     + '<div class="mmeta" style="margin-top:12px"><span>Pay<b>'+inr(j.pay)+' '+esc(j.unit)+'</b></span><span>Type<b>'+esc(j.type)+'</b></span><span>Location<b>'+esc(j.loc)+'</b></span><span>Duration<b>'+esc(j.dur)+'</b></span><span>Openings<b>'+j.openings+'</b></span><span>Deadline<b>'+esc(deadlineLabel(j.deadline))+'</b></span></div>'
     + '<h4>About this work</h4><p class="body">'+esc(j.desc)+'</p>'
     + '<h4>What you will do</h4><ul>'+j.resp.map(function(r){return "<li>"+esc(r)+"</li>";}).join("")+'</ul>'
     + '<h4>Skills needed</h4><div class="skills">'+j.skills.map(function(s){return '<span class="skill">'+esc(s)+'</span>';}).join("")+'</div>'
-    + '<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap"><button type="button" class="btn btn-ghost btn-sm" id="modalSave">'+(saved?"♥ Saved — tap to remove":"♥ Save for later")+'</button><a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="'+waShareUrl(j)+'">Share on WhatsApp</a></div>'
-    + (applied
+    + '<div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap;align-items:center"><button type="button" class="btn btn-ghost btn-sm" id="modalSave">'+(saved?"♥ Saved — tap to remove":"♥ Save for later")+'</button><a class="btn btn-ghost btn-sm" target="_blank" rel="noopener" href="'+waShareUrl(j)+'">Share on WhatsApp</a>'+reportLinkHtml(j)+'</div>'
+    + reportBox
+    + (closed
+      ? '<div class="form-msg err" style="display:block">This listing is <b>closed</b> — its apply-by date ('+esc(j.deadline)+') has passed, so it no longer accepts applications. It stays on the board so you can still read it, save it or report it.</div>'
+      : applied
       ? '<div class="form-msg ok">You have already applied to this listing in this visit. Your reference: <b class="mono">'+esc(applied)+'</b></div>'
       : '<h4 id="applyHead">Apply for this work</h4>'
         + '<form id="applyForm">' + attachHtml + '<div class="fgrid">'
@@ -1518,10 +1653,52 @@ function openJob(id, toApply){
   $("overlay").classList.add("open");
   $("modalX").addEventListener("click", closeModal);
   $("modalSave").addEventListener("click", function(){ toggleSave(j.id); openJob(j.id, false); });
+  var repBtn = $("modalContent").querySelector("[data-report]");
+  if(repBtn) repBtn.addEventListener("click", function(){
+    var box = $("reportBox");
+    box.classList.toggle("open");
+    if(box.classList.contains("open")) box.scrollIntoView({behavior:"smooth", block:"nearest"});
+  });
+  $("reportForm").addEventListener("submit", submitReport);
+  if(toReport){
+    var rb2 = $("reportBox");
+    rb2.classList.add("open");
+    setTimeout(function(){ rb2.scrollIntoView({behavior:"smooth", block:"nearest"}); }, 60);
+  }
   var f = $("applyForm");
-  if(f){ f.addEventListener("submit", submitApply); if(toApply){ var el=$("aName"); if(el) el.focus(); } }
+  if(f){
+    f.addEventListener("submit", submitApply);
+    /* A saved resume auto-fills the form — no rebuild, no retyping. */
+    if(rbd){
+      if(!$("aName").value) $("aName").value = rbd.name || "";
+      if(!$("aContact").value) $("aContact").value = rbd.email || rbd.phone || "";
+      if(!$("aCollege").value) $("aCollege").value = [rbd.college, rbd.course].filter(Boolean).join(", ");
+      if(!$("aLink").value && rbd.links) $("aLink").value = rbd.links.split(",")[0].trim();
+    }
+    if(toApply){ var el=$("aName"); if(el) el.focus(); }
+  }
   var ab = $("attachResumeBtn");
   if(ab) ab.addEventListener("click", function(){ attachResumeToForm(ab); });
+}
+/* Reporting a listing = a support ticket to the owner, same pipeline as
+   the chat tokens (state.tickets + cloudSaveTicket), carrying the
+   listing reference so the owner can act on the exact listing. */
+function submitReport(e){
+  e.preventDefault();
+  var j = currentJob; if(!j) return;
+  var reason = $("rReason").value;
+  var name = $("rName").value.trim();
+  var detail = $("rDetail").value.trim();
+  var token = "VTH-" + genCode(6);
+  var desc = "Listing report — “" + j.title + "” (" + j.org + ", listing ref " + j.id + "). Reason: " + reason + (detail ? ". " + detail : "");
+  var t = { token:token, name:name || "A student (listing report)", type:"Listing report", desc:desc, status:"Received — sent to owner", when:new Date() };
+  state.tickets.unshift(t);
+  if(window.cloudSaveTicket) cloudSaveTicket(t);
+  renderActivity();
+  var msg = $("reportMsg");
+  msg.className = "form-msg ok";
+  msg.innerHTML = "Report sent to the owner. Your ticket ref is <b class='mono'>" + token + "</b> — track it any time under <b>My support tokens</b>, or type it into the chat assistant.";
+  toast("Report sent — ticket " + token);
 }
 function attachResumeToForm(btn){
   var d = rbDataOrNull(); if(!d) return;
@@ -1544,8 +1721,9 @@ document.addEventListener("keydown", function(e){ if(e.key==="Escape"){ closeMod
 function submitApply(e){
   e.preventDefault();
   var j = currentJob; if(!j) return;
-  var name = $("aName").value.trim(), contact = $("aContact").value.trim(), pitch = $("aPitch").value.trim();
   var msg = $("applyMsg");
+  if(isClosed(j)){ msg.className="form-msg err"; msg.textContent="This listing has closed — its apply-by date has passed, so it no longer accepts applications."; return; }
+  var name = $("aName").value.trim(), contact = $("aContact").value.trim(), pitch = $("aPitch").value.trim();
   if(!name || !contact || !pitch){ msg.className="form-msg err"; msg.textContent="Please fill your name, contact and the “why you fit” note."; return; }
   var ref = "VTH-APP-" + genCode(4);
   state.appliedIds[j.id] = ref;
@@ -1598,11 +1776,22 @@ document.addEventListener("click", function(e){
 /* ---------- activity ---------- */
 var APP_STEPS = ["Applied","Under review","Shortlisted","Selected"];
 function appStepsHtml(a){
+  if(a.status === "Withdrawn") return "";
   var idx = APP_STEPS.indexOf(a.status || "Applied");
   if(idx < 0) idx = 0;
   return '<div class="app-steps" aria-label="Application status: '+esc(a.status || "Applied")+'">'
     + APP_STEPS.map(function(s, i){ return '<span class="st'+(i <= idx ? " done" : "")+'">'+s+'</span>'; }).join("")
     + '</div>';
+}
+function appDetailHtml(a){
+  var rows = "";
+  if(a.name) rows += '<div class="ad-row"><b>Name:</b> '+esc(a.name)+'</div>';
+  if(a.contact) rows += '<div class="ad-row"><b>Contact:</b> '+esc(a.contact)+'</div>';
+  if(a.college) rows += '<div class="ad-row"><b>College &amp; course:</b> '+esc(a.college)+'</div>';
+  if(a.link) rows += '<div class="ad-row"><b>Portfolio / link:</b> '+esc(a.link)+'</div>';
+  if(a.pitch) rows += '<div class="ad-row"><b>Why I fit:</b> '+esc(a.pitch)+'</div>';
+  if(a.when) rows += '<div class="ad-row"><b>Submitted:</b> '+esc(a.when.toLocaleString ? a.when.toLocaleString() : String(a.when))+'</div>';
+  return '<div class="app-detail" data-app-detail="'+esc(a.ref)+'">'+rows+'</div>';
 }
 function renderActivity(){
   var savedJobs = JOBS.filter(function(j){ return state.saved[j.id]; });
@@ -1612,16 +1801,48 @@ function renderActivity(){
   dot.textContent = total;
   if(state.applications.length){
     $("appList").innerHTML = state.applications.map(function(a){
-      return '<div class="act-item"><div class="grow"><b>'+esc(a.title)+'</b><small>'+esc(a.org)+' · Ref <span class="mono">'+esc(a.ref)+'</span></small></div><span class="status teal">'+esc(a.status || "Applied")+'</span>'+appStepsHtml(a)+'</div>';
+      var withdrawn = a.status === "Withdrawn";
+      return '<div class="act-item"><div class="grow"><b>'+esc(a.title)+'</b><small>'+esc(a.org)+' · Ref <span class="mono">'+esc(a.ref)+'</span></small></div>'
+        + '<button type="button" class="btn btn-ghost btn-sm" data-app-view="'+esc(a.ref)+'">What I sent</button>'
+        + (withdrawn ? '' : '<button type="button" class="btn btn-ghost btn-sm" data-app-withdraw="'+esc(a.ref)+'">Withdraw</button>')
+        + '<span class="status '+(withdrawn ? "withdrawn" : "teal")+'">'+esc(a.status || "Applied")+'</span>'
+        + appStepsHtml(a)
+        + appDetailHtml(a)
+        + (withdrawn ? '' : '<div class="wd-confirm" data-wd-confirm="'+esc(a.ref)+'"><span>Withdraw this application? The owner will see it as Withdrawn and it stops counting toward the listing.</span><button type="button" class="btn btn-green btn-sm" data-wd-yes="'+esc(a.ref)+'">Yes, withdraw</button><button type="button" class="btn btn-ghost btn-sm" data-wd-no="'+esc(a.ref)+'">Keep it</button></div>')
+        + '</div>';
     }).join("");
+    Array.prototype.forEach.call(document.querySelectorAll("[data-app-view]"), function(b){
+      b.addEventListener("click", function(){
+        var d = document.querySelector('[data-app-detail="'+b.getAttribute("data-app-view")+'"]');
+        if(d) d.classList.toggle("open");
+      });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-app-withdraw]"), function(b){
+      b.addEventListener("click", function(){
+        var c = document.querySelector('[data-wd-confirm="'+b.getAttribute("data-app-withdraw")+'"]');
+        if(c) c.classList.add("open");
+      });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-wd-no]"), function(b){
+      b.addEventListener("click", function(){
+        var c = document.querySelector('[data-wd-confirm="'+b.getAttribute("data-wd-no")+'"]');
+        if(c) c.classList.remove("open");
+      });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll("[data-wd-yes]"), function(b){
+      b.addEventListener("click", function(){ withdrawApplication(b.getAttribute("data-wd-yes")); });
+    });
   } else {
     $("appList").innerHTML = '<div class="act-empty">No applications yet — open any listing above and hit <b>Apply now</b>.</div>';
   }
   if(savedJobs.length){
     $("savedList").innerHTML = savedJobs.map(function(j){
       var applied = state.appliedIds[j.id];
-      return '<div class="act-item"><div class="grow"><b>'+esc(j.title)+'</b><small>'+esc(j.org)+' · '+inr(j.pay)+' '+esc(j.unit)+'</small></div>'
-        + '<button type="button" class="btn '+(applied?"btn-ghost":"btn-green")+' btn-sm" data-saved-apply="'+j.id+'">'+(applied?"Applied ✓":"Apply")+'</button>'
+      var closed = isClosed(j);
+      return '<div class="act-item"><div class="grow"><b>'+esc(j.title)+'</b><small>'+esc(j.org)+' · '+inr(j.pay)+' '+esc(j.unit)+(closed ? ' · Closed' : '')+'</small></div>'
+        + (closed
+            ? '<button type="button" class="btn btn-ghost btn-sm" disabled aria-disabled="true">Closed</button>'
+            : '<button type="button" class="btn '+(applied?"btn-ghost":"btn-green")+' btn-sm" data-saved-apply="'+j.id+'">'+(applied?"Applied ✓":"Apply")+'</button>')
         + '<button type="button" class="btn btn-ghost btn-sm" data-saved-remove="'+j.id+'" aria-label="Remove from saved">✕</button></div>';
     }).join("");
     Array.prototype.forEach.call(document.querySelectorAll("[data-saved-apply]"),function(b){ b.addEventListener("click",function(){ openJob(b.getAttribute("data-saved-apply"),true); }); });
@@ -1637,6 +1858,21 @@ function renderActivity(){
     $("ticketList").innerHTML = '<div class="act-empty">No tokens yet — tap <b>Chat support</b> and choose “Raise an issue”.</div>';
   }
   renderAlerts();
+}
+
+/* Withdraw one of the student's own applications: it flips to Withdrawn,
+   frees the listing's Apply button, stops counting toward the listing's
+   applied total, and syncs to Supabase when the backend is reachable. */
+function withdrawApplication(ref){
+  var a = state.applications.filter(function(x){ return x.ref === ref; })[0];
+  if(!a || a.status === "Withdrawn") return;
+  a.status = "Withdrawn";
+  if(state.appliedIds[a.jobId] === a.ref) delete state.appliedIds[a.jobId];
+  var j = JOBS.filter(function(x){ return x.id === a.jobId; })[0];
+  if(j && (j.apps || 0) > 0) j.apps -= 1;
+  if(window.cloudWithdrawApplication) cloudWithdrawApplication(a);
+  renderActivity(); renderJobs(); renderTrending();
+  toast("Application " + a.ref + " withdrawn");
 }
 
 /* ---------- alerts & deadline reminders ---------- */
@@ -1686,6 +1922,15 @@ function syncSavedToggle(){
 $("savedToggle").addEventListener("click", function(){
   state.savedOnly = !state.savedOnly;
   syncSavedToggle(); renderJobs();
+});
+function syncClosedToggle(){
+  var b = $("closedToggle");
+  b.classList.toggle("on", state.hideClosed);
+  b.setAttribute("aria-pressed", state.hideClosed ? "true" : "false");
+}
+$("closedToggle").addEventListener("click", function(){
+  state.hideClosed = !state.hideClosed;
+  syncClosedToggle(); renderJobs();
 });
 $("heroSearch").addEventListener("submit", function(e){
   e.preventDefault();
@@ -1783,7 +2028,7 @@ function trackToken(code){
     botSay("Found it. Token <b class='mono'>"+esc(t.token)+"</b><br/>Type: "+esc(t.type)+"<br/>Status: <b>"+esc(t.status)+"</b><br/><br/>For a faster update, message the owner on WhatsApp and quote this token — or use “Continue on WhatsApp” from when the token was created.");
   } else if(state.applications.some(function(a){ return a.ref.toUpperCase()===code.toUpperCase(); })){
     var a = state.applications.filter(function(x){ return x.ref.toUpperCase()===code.toUpperCase(); })[0];
-    botSay("That's an application reference, and it's with us: <b class='mono'>"+esc(a.ref)+"</b> for “"+esc(a.title)+"” at "+esc(a.org)+". Status: <b>"+esc(a.status||"Applied")+"</b> — it moves Applied → Under review → Shortlisted → Selected as the owner reviews it, and you can watch it live under “My applications” on this page. Shortlisted students are contacted on the email/phone given in the application.");
+    botSay("That's an application reference, and it's with us: <b class='mono'>"+esc(a.ref)+"</b> for “"+esc(a.title)+"” at "+esc(a.org)+". Status: <b>"+esc(a.status||"Applied")+"</b>"+(a.status==="Withdrawn" ? " — you withdrew this application, so it's closed and no longer counts toward the listing. You can apply again from the listing if it's still open." : " — it moves Applied → Under review → Shortlisted → Selected as the owner reviews it, and you can watch it live under “My applications” on this page. Shortlisted students are contacted on the email/phone given in the application."));
   } else {
     botText("I couldn't find “"+code+"” among the tokens or applications created in this browser session. Tokens are created when you choose “Raise an issue” here — check the code and try again, or raise a fresh issue.");
   }
@@ -1799,7 +2044,7 @@ function faq(topic){
   } else if(topic==="pay"){
     botSay("Pay is shown on every listing as “Starting at” (per month, per project or per week) and is paid by the organisation that posted the work, as agreed before you start. My honest advice: confirm the amount, payment date and mode (UPI/bank) in writing before beginning, and never pay a “registration fee” for a job. If a listing's payment goes wrong, use “Raise an issue” and I'll create a token for the owner.");
   } else if(topic==="resume"){
-    botSay("Yes — the <b>Resume Builder</b> on this page builds your resume for free. You answer a few short questions (about you, the role you want, your skills, education, experience and projects) and it lays out a clean one-page resume you can <b>download</b> or <b>copy as text</b> to attach to applications.<br/><br/>No sign-up, and your answers stay in this browser tab — nothing is uploaded.<br/><br/><a href=\"#resume\" data-rb-open style=\"font-weight:700\">Open the Resume Builder →</a>");
+    botSay("Yes — the <b>Resume Builder</b> on this page builds your resume for free. You answer a few short questions (about you, the role you want, your skills, education, experience and projects) and it lays out a clean one-page resume you can <b>download</b> or <b>copy as text</b> to attach to applications.<br/><br/>No sign-up. Your answers are saved in this browser on this device — nothing is uploaded — so the resume auto-fills your future applications here and powers your match scores. “Clear saved resume” in the builder removes it anytime.<br/><br/><a href=\"#resume\" data-rb-open style=\"font-weight:700\">Open the Resume Builder →</a>");
   } else if(topic==="human"){
     botSay("You can reach the hub owner on WhatsApp. The smoothest way: choose <b>Raise an issue</b> — I'll generate a token and open WhatsApp with your name, token and issue pre-filled, so the owner knows exactly which query is yours.");
   }
@@ -1868,6 +2113,45 @@ $("chatForm").addEventListener("submit", function(e){
    Everything is built in this tab — answers are never sent anywhere. */
 var RB_LABELS = ["About you","Your goal","Skills","Education","Experience & projects","Extras"];
 var rbStep = 0, rbBuiltData = null;
+
+/* ---------- resume persistence (this browser, this device only) ----------
+   The builder's answers are kept in the browser so closing the tab doesn't
+   lose them. A saved resume restores the form on the next visit, auto-fills
+   application forms and powers the match scores — no rebuild needed.
+   Nothing leaves the device; “Clear saved resume” wipes it. */
+var RB_FIELDS = ["rbName","rbEmail","rbPhone","rbCity","rbCollege","rbCourse","rbLinks","rbRole","rbLooking","rbSummary","rbSkills","rbTools","rbLang","rbEdu1Deg","rbEdu1Inst","rbEdu1Year","rbEdu1Score","rbEdu2Deg","rbEdu2Inst","rbEdu2Year","rbEdu2Score","rbExp1Title","rbExp1Org","rbExp1Dur","rbExp1Desc","rbExp2Title","rbExp2Org","rbExp2Dur","rbExp2Desc","rbProjects","rbCerts","rbAch","rbInterests"];
+function rbPersist(){
+  var answers = {};
+  RB_FIELDS.forEach(function(id){ var el = $(id); if(el) answers[id] = el.value; });
+  var hasContent = RB_FIELDS.some(function(id){ return (answers[id] || "").trim(); });
+  if(!hasContent && !rbBuiltData){ lsDel(LS_RESUME); rbSyncSavedUi(); return; }
+  lsSet(LS_RESUME, { answers:answers, built:rbBuiltData, savedAt:Date.now() });
+  rbSyncSavedUi();
+}
+function rbRestoreSaved(){
+  var s = lsGet(LS_RESUME);
+  if(!s) return;
+  if(s.answers){
+    RB_FIELDS.forEach(function(id){
+      var el = $(id);
+      if(el && typeof s.answers[id] === "string" && s.answers[id]) el.value = s.answers[id];
+    });
+  }
+  if(s.built && s.built.name){ rbBuiltData = s.built; }
+  rbSyncSavedUi();
+}
+function rbSyncSavedUi(){
+  var bar = $("rbSavedBar"); if(!bar) return;
+  bar.classList.toggle("show", !!lsGet(LS_RESUME));
+}
+function rbClearSaved(announce){
+  lsDel(LS_RESUME);
+  rbBuiltData = null;
+  var form = $("rbForm"); if(form) form.reset();
+  rbSyncSavedUi();
+  renderJobs(); /* match scores come from the saved resume — refresh them */
+  if(announce !== false) toast("Saved resume cleared from this browser");
+}
 
 function rbVal(id){ var el = $(id); return el ? el.value.trim() : ""; }
 function rbSplitLines(id){ return rbVal(id).split(/\n+/).map(function(s){ return s.trim(); }).filter(Boolean); }
@@ -2045,12 +2329,27 @@ $("rbForm").addEventListener("submit", function(e){
     if(err){ rbShowStep(i); rbMsg(err); return; }
   }
   rbBuiltData = rbData();
+  rbPersist(); /* saved in this browser — survives closing the tab */
   $("rbSheet").innerHTML = rbResumeHtml(rbBuiltData);
   $("rbWizard").style.display = "none";
   $("rbResult").style.display = "";
   $("rbResult").scrollIntoView({ behavior:"smooth", block:"start" });
   toast("Your resume is ready — download it or copy the text.");
   renderJobs(); /* refresh match scores on the listing cards */
+});
+/* Answers save as the student types, so even an unfinished resume is
+   waiting in the form next visit. */
+var rbPersistTimer = null;
+$("rbForm").addEventListener("input", function(){
+  if(rbPersistTimer) clearTimeout(rbPersistTimer);
+  rbPersistTimer = setTimeout(rbPersist, 400);
+});
+$("rbClearBtn1").addEventListener("click", function(){ rbClearSaved(true); });
+$("rbClearBtn2").addEventListener("click", function(){
+  rbClearSaved(true);
+  $("rbResult").style.display = "none";
+  $("rbIntro").style.display = "";
+  document.getElementById("resume").scrollIntoView({ behavior:"smooth" });
 });
 $("rbDownloadBtn").addEventListener("click", function(){
   if(!rbBuiltData) return;
@@ -2086,13 +2385,13 @@ $("rbEditBtn").addEventListener("click", function(){
   $("rbWizard").scrollIntoView({ behavior:"smooth", block:"start" });
 });
 $("rbRestartBtn").addEventListener("click", function(){
-  $("rbForm").reset();
-  rbBuiltData = null;
+  rbClearSaved(false); /* start over = wipe the saved answers too */
   renderJobs(); /* clear match scores from the listing cards */
   $("rbResult").style.display = "none";
   $("rbWizard").style.display = "none";
   $("rbIntro").style.display = "";
   document.getElementById("resume").scrollIntoView({ behavior:"smooth" });
+  toast("Cleared — start fresh whenever you're ready");
 });
 document.addEventListener("click", function(e){
   var t = e.target.closest ? e.target.closest("[data-rb-open]") : null;
@@ -2109,6 +2408,7 @@ document.addEventListener("click", function(e){
 })();
 
 /* ---------- init ---------- */
+rbRestoreSaved(); /* a saved resume restores the form + match scores before first render */
 renderCats();
 /* While the shared board loads from Supabase, the grid shows skeleton
    shimmer cards instead of a blank pause; a fallback renders the built-in
@@ -2140,7 +2440,7 @@ renderActivity();
    ============================================================ */
 var SB = { on:false, client:null, user:null, isOwner:false, channels:[], pollTimer:null, jobsOk:false };
 var TICKET_STATUSES = ["Received — sent to owner","In progress","Resolved","Closed"];
-var APP_STATUSES = ["Applied","Under review","Shortlisted","Selected"];
+var APP_STATUSES = ["Applied","Under review","Shortlisted","Selected","Withdrawn"];
 
 function sbIsConfigured(){
   var c = window.SUPABASE_CONFIG;
@@ -2345,6 +2645,15 @@ window.cloudSaveApplication = function(rec){
     });
   }
 };
+/* Withdrawal sync: flips the student's own application row to Withdrawn.
+   Works for the owner outright; for signed-in students once the
+   withdrawal-sync policy (shown in the dashboard) has been run; for
+   anonymous applicants the access rules decline the write and the
+   withdrawal still stands on their device and in their My Applications. */
+window.cloudWithdrawApplication = function(rec){
+  if(!SB.on) return;
+  SB.client.from("applications").update({ status:"Withdrawn" }).eq("ref", rec.ref).then(function(){});
+};
 window.cloudSaveTicket = function(t){
   if(!SB.on) return;
   SB.client.from("tickets").insert({
@@ -2385,11 +2694,59 @@ function refreshMyTicketStatuses(){
     var ch2 = false;
     res.data.forEach(function(d){
       state.applications.forEach(function(a){
+        if(a.status === "Withdrawn") return; /* a local withdrawal is never resurrected by a stale cloud status */
         if(a.ref === d.ref && d.status && a.status !== d.status){ a.status = d.status; ch2 = true; }
       });
     });
     if(ch2) renderActivity();
   });
+}
+
+/* ---------- owner stats: real counts only ----------
+   Applications come from real records — the shared database when the
+   owner fetch succeeds, otherwise this device's own submissions (the
+   note under the grid says which). Saves and detail views exist only on
+   this device, and are labelled that way. Withdrawn applications are
+   excluded from every count. */
+function statRowsHtml(map, emptyText){
+  var keys = Object.keys(map).sort(function(a,b){ return map[b] - map[a]; }).slice(0,6);
+  if(!keys.length) return '<span class="snone">' + emptyText + '</span>';
+  return keys.map(function(k){ return '<div class="srow"><span>' + esc(k) + '</span><b>' + map[k] + '</b></div>'; }).join("");
+}
+function renderOwnerStats(cloudApps){
+  if(!$("statAppsPer")) return;
+  var per = {}, cats = {}, total = 0;
+  function countApp(jobId, title){
+    var j = JOBS.filter(function(x){ return x.id === jobId; })[0];
+    if(!j && title) j = JOBS.filter(function(x){ return x.title === title; })[0];
+    var key = j ? j.title : (title || "Unknown listing");
+    per[key] = (per[key] || 0) + 1;
+    cats[j ? j.cat : "Other"] = (cats[j ? j.cat : "Other"] || 0) + 1;
+    total++;
+  }
+  if(cloudApps){
+    cloudApps.forEach(function(a){ if(a.status !== "Withdrawn") countApp(a.job_id, a.title); });
+  } else {
+    state.applications.forEach(function(a){ if(a.status !== "Withdrawn") countApp(a.jobId, a.title); });
+  }
+  var sv = {};
+  Object.keys(state.saved).forEach(function(id){
+    if(!state.saved[id]) return;
+    var j = JOBS.filter(function(x){ return x.id === id; })[0];
+    if(j) sv[j.title] = 1;
+  });
+  var vw = {}, allViews = lsGet(LS_VIEWS) || {};
+  Object.keys(allViews).forEach(function(id){
+    var j = JOBS.filter(function(x){ return x.id === id; })[0];
+    if(j && allViews[id] > 0) vw[j.title] = allViews[id];
+  });
+  $("statAppsPer").innerHTML = statRowsHtml(per, "No applications recorded yet.");
+  $("statSavesPer").innerHTML = statRowsHtml(sv, "Nothing saved on this device yet.");
+  $("statCats").innerHTML = statRowsHtml(cats, "No applications recorded yet.");
+  $("statViewsPer").innerHTML = statRowsHtml(vw, "No listing opened on this device yet.");
+  $("statNote").textContent = cloudApps
+    ? "Applications counted live from the shared database — " + total + " active (withdrawn excluded). Saves and detail views are counted on this device only; the site keeps no central record of them."
+    : "Applications counted from this device's own records — " + total + " active (withdrawn excluded). Sign in as the owner to count from the shared database. Saves and detail views are this device only.";
 }
 
 /* ---------- owner dashboard data ---------- */
@@ -2398,8 +2755,10 @@ function refreshOwnerData(){
   SB.client.from("applications").select("*").order("created_ms", { ascending:false }).then(function(res){
     if(res.error){
       $("ownerApps").innerHTML = '<div class="act-empty">Couldn\'t load applications. Check that the setup SQL was run and that your login email matches the owner email in it.</div>';
+      renderOwnerStats(null);
       return;
     }
+    renderOwnerStats(res.data);
     if(!res.data.length){
       $("ownerApps").innerHTML = '<div class="act-empty">No applications yet. Applications from every student and device will appear here.</div>';
       return;
