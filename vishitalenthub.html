@@ -446,11 +446,27 @@ select.status-sel{border:1px solid var(--line);border-radius:8px;padding:8px 9px
 .bars{display:flex;flex-direction:column;gap:8px}
 .bar-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:11.5px;color:var(--muted);margin-bottom:4px}
 .bar-head b{color:var(--ink);font-size:12px;font-weight:700;text-align:right}
-.bar-track{height:6px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
-.bar-fill{height:100%;width:0;border-radius:99px;background:var(--green);transition:width 1s cubic-bezier(.25,.8,.35,1)}
-.bar-fill.gold{background:var(--star)}
-.bar-fill.red{background:var(--heart)}
-.bar-fill.mfill{background:var(--star)}
+.bar-num{font-variant-numeric:tabular-nums}
+.bar-track{height:7px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
+.bar-fill{height:100%;width:0;border-radius:99px;position:relative;overflow:hidden;background:linear-gradient(90deg,var(--green-d),var(--green) 55%,var(--accent));transition:width 1.15s cubic-bezier(.22,.75,.25,1)}
+.bar-fill.gold{background:linear-gradient(90deg,#B97E16,var(--star) 55%,#EFC25E)}
+.bar-fill.red{background:linear-gradient(90deg,#9E2B1E,var(--heart) 55%,#E05B4B)}
+.bar-fill.mfill{background:linear-gradient(90deg,#B97E16,var(--star) 55%,#EFC25E)}
+/* a soft highlight sweeps across the filled portion while the bar is on screen */
+.bar-fill::after{content:"";position:absolute;inset:0;background:linear-gradient(100deg,transparent 15%,rgba(255,255,255,.45) 50%,transparent 85%);transform:translateX(-110%);animation:barSweep 2.8s ease-in-out infinite;pointer-events:none}
+@keyframes barSweep{0%{transform:translateX(-110%)}55%,100%{transform:translateX(110%)}}
+@media (prefers-reduced-motion: reduce){
+  .bar-fill::after{display:none}
+}
+/* skills on a card are filter buttons: tap one to see only listings needing it */
+button.skill{font:inherit;font-size:12px;cursor:pointer;border:1px solid transparent;text-align:left;transition:border-color .15s ease,background .15s ease,color .15s ease}
+button.skill:hover{border-color:var(--green);color:var(--green-d)}
+button.skill.on{background:var(--green-deep);border-color:var(--green-deep);color:#fff}
+.skill-filter{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--amber-soft);border:1px solid #D9B64A;border-radius:var(--radius);padding:9px 12px;margin:-8px 0 18px;font-size:13.5px;color:var(--body)}
+.skill-filter[hidden]{display:none}
+.skill-filter .sf-name{font-weight:700;color:var(--ink);background:var(--surface);border:1px solid #D9B64A;border-radius:99px;padding:2px 11px}
+.skill-filter .sf-clear{margin-left:auto;background:none;border:0;color:var(--green-d);font-weight:700;font-size:13.5px;padding:4px 6px;border-radius:6px}
+.skill-filter .sf-clear:hover{text-decoration:underline}
 /* owner dashboard stays out of the public view until the owner arrives
    via the footer link or a #owner URL (see the premium script block) */
 #owner.owner-locked{display:none}
@@ -522,9 +538,18 @@ select.status-sel{border:1px solid var(--line);border-radius:8px;padding:8px 9px
 @media(max-width:560px){.stat-grid{grid-template-columns:1fr}}
 
 /* ---------- premium layer: announcement ticker, compact header, hero word reveal, stats band, showcase tiles ---------- */
-.ticker{background:var(--green-deep-2);color:#C7D5E8;overflow:hidden;max-height:40px;transition:max-height .35s ease,opacity .3s ease}
-.ticker-track{display:inline-flex;white-space:nowrap;padding:9px 0;animation:tickmove 42s linear infinite;will-change:transform}
-.ticker:hover .ticker-track{animation-play-state:paused}
+.ticker{position:relative;background:var(--green-deep-2);color:#C7D5E8;overflow:hidden;max-height:40px;transition:max-height .35s ease,opacity .3s ease}
+/* soft fade at both ends so items ease in and out of view instead of
+   clipping hard against the edge of the bar */
+.ticker::before,.ticker::after{content:"";position:absolute;top:0;bottom:0;width:64px;z-index:2;pointer-events:none}
+.ticker::before{left:0;background:linear-gradient(90deg,#0A1A30,rgba(10,26,48,0))}
+.ticker::after{right:0;background:linear-gradient(270deg,#0A1A30,rgba(10,26,48,0))}
+@media (prefers-color-scheme: dark){
+  .ticker::before{background:linear-gradient(90deg,#081426,rgba(8,20,38,0))}
+  .ticker::after{background:linear-gradient(270deg,#081426,rgba(8,20,38,0))}
+}
+.ticker-track{display:inline-flex;white-space:nowrap;padding:9px 0;animation:tickmove 42s linear infinite;will-change:transform;backface-visibility:hidden}
+.ticker:hover .ticker-track,.ticker:focus-within .ticker-track{animation-play-state:paused}
 .ticker-set{display:inline-flex;align-items:center}
 .ticker-item{font-size:12.5px;font-weight:600;letter-spacing:.02em;padding:0 16px}
 .ticker-item b{color:#D8B989;font-weight:700;font-family:"Poppins",sans-serif}
@@ -646,10 +671,10 @@ header.site.compact #menuBtn{border-color:rgba(255,255,255,.45);color:#fff}
     <!-- FIND WORK -->
     <section class="block" id="jobs">
       <div class="sec-head"><h2>Find work</h2></div>
-      <p class="sec-sub">Like a freelance marketplace, but every gig is student-friendly. Check the poster's rating, save the ones you like with the ♥, and apply — your application gets its own reference ID you can quote on WhatsApp.</p>
+      <p class="sec-sub">Like a freelance marketplace, but every gig is student-friendly. Check the poster's rating, save the ones you like with the ♥, and apply — your application gets its own reference ID you can quote on WhatsApp. Tip: tap any skill tag on a listing to see only the work that needs that skill.</p>
       <div class="cat-row" id="catRow" role="group" aria-label="Filter by category"></div>
       <div class="filters">
-        <input type="search" id="fQ" placeholder="Search title, skill or organisation…" aria-label="Search listings" />
+        <input type="search" id="fQ" placeholder="Search title, skill, description or category…" aria-label="Search listings by keyword" />
         <select id="fType" aria-label="Work type">
           <option value="">All types</option>
           <option>Internship</option>
@@ -670,6 +695,7 @@ header.site.compact #menuBtn{border-color:rgba(255,255,255,.45);color:#fff}
         </select>
         <select id="fSort" aria-label="Sort listings">
           <option value="new">Newest first</option>
+          <option value="applied">Most applied</option>
           <option value="rating">Top rated posters</option>
           <option value="pay-high">Pay: high to low</option>
           <option value="pay-low">Pay: low to high</option>
@@ -679,6 +705,11 @@ header.site.compact #menuBtn{border-color:rgba(255,255,255,.45);color:#fff}
         <button type="button" class="chip" id="savedToggle" aria-pressed="false">♥ Saved only</button>
         <button type="button" class="chip" id="closedToggle" aria-pressed="false">Hide closed</button>
         <span class="res" id="resCount"></span>
+      </div>
+      <div class="skill-filter" id="skillFilter" hidden>
+        <span>Showing only listings that need</span>
+        <span class="sf-name" id="skillName"></span>
+        <button type="button" class="sf-clear" id="skillClear">✕ Clear skill filter</button>
       </div>
       <div class="jobs" id="jobGrid" aria-busy="true">
         <div class="skel-card" aria-hidden="true"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line w60"></div><div class="skel skel-line"></div><div class="skel skel-line w80"></div><div class="skel skel-line w40"></div></div></div>
@@ -1390,7 +1421,7 @@ var REVIEWS = [
  {stars:5,text:"“My stipend was delayed once — I raised an issue in the chat, got a token, and the owner sorted it on WhatsApp the same evening. That tracking really works.”",name:"Rahul Verma",role:"Excel assistant gig · B.Com student",color:"#2563A8"}
 ];
 
-var state = { cat:"All", applications:[], tickets:[], appliedIds:{}, saved:{}, savedOnly:false, hideClosed:false, alerts:{cats:{}, feed:[]}, knownIds:null };
+var state = { cat:"All", skill:null, applications:[], tickets:[], appliedIds:{}, saved:{}, savedOnly:false, hideClosed:false, alerts:{cats:{}, feed:[]}, knownIds:null };
 var $ = function(id){ return document.getElementById(id); };
 function esc(s){ return String(s==null?"":s).replace(/[&<>"']/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];}); }
 function inr(n){ return "₹" + Number(n).toLocaleString("en-IN"); }
@@ -1491,20 +1522,84 @@ function deadlineBar(j){
 /* The two animated bars on every listing card. The match bar fills to the
    real match score from the student's saved resume; with no saved resume
    (or no skill overlap) it stays empty and says so instead of inventing a
-   percentage. Fills start at width 0 and are set to their real value right
-   after render (see renderJobs); the page's reduced-motion rule removes
-   the transition, so they then appear at their final fill immediately. */
+   percentage. The number beside each bar is baked into the markup at its
+   real value; when a card scrolls into view, animateBars counts it up
+   from 0 in step with the fill (see below). Under prefers-reduced-motion
+   nothing animates: fills and numbers appear at their final values. */
 function cardBars(j, ms){
   var db = deadlineBar(j);
-  var dl = '<div class="bar-row"><div class="bar-head"><span>Time left to apply</span><b>'+esc(db.label)+'</b></div>'
+  var dhead;
+  if(j.deadline && !isClosed(j)){
+    dhead = '<b><span class="bar-num" data-count="'+db.pct+'" data-suffix="%">'+db.pct+'%</span> of the window left · '+esc(db.label)+'</b>';
+  } else {
+    dhead = '<b>'+esc(db.label)+'</b>';
+  }
+  var dl = '<div class="bar-row"><div class="bar-head"><span>Time left to apply</span>'+dhead+'</div>'
     + '<div class="bar-track" role="img" aria-label="Time left to apply: '+esc(db.label)+'"><div class="bar-fill '+db.cls+'" data-w="'+db.pct+'"></div></div></div>';
-  var mlabel, mpct = 0;
-  if(ms !== null && ms !== undefined){ mlabel = ms + "% match"; mpct = ms; }
-  else if(rbDataOrNull()){ mlabel = "No strong match yet"; }
-  else { mlabel = "Build a resume to see your match"; }
-  var mb = '<div class="bar-row"><div class="bar-head"><span>Your match</span><b>'+esc(mlabel)+'</b></div>'
+  var mlabel, mpct = 0, mhead;
+  if(ms !== null && ms !== undefined){
+    mlabel = ms + "% match"; mpct = ms;
+    mhead = '<b><span class="bar-num" data-count="'+ms+'" data-suffix="% match">'+ms+'% match</span></b>';
+  }
+  else if(rbDataOrNull()){ mlabel = "No strong match yet"; mhead = '<b>'+esc(mlabel)+'</b>'; }
+  else { mlabel = "Build a resume to see your match"; mhead = '<b>'+esc(mlabel)+'</b>'; }
+  var mb = '<div class="bar-row"><div class="bar-head"><span>Your match</span>'+mhead+'</div>'
     + '<div class="bar-track" role="img" aria-label="Your match: '+esc(mlabel)+'"><div class="bar-fill mfill" data-w="'+mpct+'"></div></div></div>';
   return '<div class="bars">' + dl + mb + '</div>';
+}
+/* Animate a rendered board's bars: each card's fills ease to their real
+   width and the numbers beside them count up in step, triggered when the
+   card scrolls into view. Called after every renderJobs, so filtering,
+   sorting and searching re-animate the fresh cards cleanly. With reduced
+   motion (or no IntersectionObserver) everything is set to its final
+   value immediately. */
+function animateBars(scope){
+  if(!scope) return;
+  var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function fillNow(card){
+    Array.prototype.forEach.call(card.querySelectorAll(".bar-fill"), function(f){
+      f.style.width = (f.getAttribute("data-w") || 0) + "%";
+    });
+    Array.prototype.forEach.call(card.querySelectorAll(".bar-num"), function(n){
+      var target = parseInt(n.getAttribute("data-count"), 10) || 0;
+      var suffix = n.getAttribute("data-suffix") || "";
+      if(reduced){ n.textContent = target + suffix; return; }
+      var t0 = null;
+      function frame(ts){
+        if(!t0) t0 = ts;
+        var p = Math.min(1, (ts - t0) / 1150);
+        var eased = 1 - Math.pow(1 - p, 3);
+        n.textContent = Math.round(target * eased) + suffix;
+        if(p < 1) requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+  var cards = scope.querySelectorAll(".job");
+  if(reduced || !("IntersectionObserver" in window)){
+    Array.prototype.forEach.call(cards, fillNow);
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(en){
+      if(en.isIntersecting){ fillNow(en.target); io.unobserve(en.target); }
+    });
+  }, { threshold:.2 });
+  Array.prototype.forEach.call(cards, function(c){ io.observe(c); });
+}
+/* ---------- skill-tag filtering ----------
+   Tapping a skill tag on a card filters the board to listings needing
+   that exact skill; tapping the active tag again (or the clear button
+   in the skill bar above the grid) removes the filter. */
+function syncSkillFilter(){
+  var bar = $("skillFilter"); if(!bar) return;
+  bar.hidden = !state.skill;
+  if(state.skill) $("skillName").textContent = state.skill;
+}
+function setSkillFilter(skill){
+  state.skill = (state.skill && skill && state.skill.toLowerCase() === String(skill).toLowerCase()) ? null : skill;
+  syncSkillFilter();
+  renderJobs();
 }
 var FLAG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3a1 1 0 0 1 2 0v1.1c2.4-1.2 4.2-.4 6.1.5 1.7.8 3.4 1.6 5.9.4a1 1 0 0 1 1 .9V13a1 1 0 0 1-1.4.9c-2.4 1.2-4.2.4-6.1-.5-1.5-.7-3-1.4-4.9-.8V21a1 1 0 1 1-2 0V3z"/></svg>';
 function reportLinkHtml(j){
@@ -1564,16 +1659,33 @@ function renderJobs(){
     if(budget==="u6" && !(j.pay<6000)) return false;
     if(budget==="m" && !(j.pay>=6000 && j.pay<=10000)) return false;
     if(budget==="a10" && !(j.pay>10000)) return false;
+    if(state.skill){
+      var sk = state.skill.toLowerCase();
+      var hasSkill = (j.skills || []).some(function(s){ return String(s).toLowerCase() === sk; });
+      if(!hasSkill) return false;
+    }
     if(q){
-      var hay = (j.title+" "+j.org+" "+j.cat+" "+j.skills.join(" ")).toLowerCase();
+      var hay = (j.title+" "+j.org+" "+j.cat+" "+(j.skills||[]).join(" ")+" "+(j.desc||"")).toLowerCase();
       if(hay.indexOf(q)===-1) return false;
     }
     return true;
   });
+  /* "Most applied" ranks by REAL submissions only: count the application
+     records per listing (excluding Withdrawn) — the same real count the
+     hero counter and Board stats use. The per-listing "apps" field is never
+     used here: on sample listings it holds labelled example numbers, not
+     applications anyone actually submitted. */
+  var realApps = {};
+  if(sort==="applied"){
+    state.applications.forEach(function(a){
+      if(a.status !== "Withdrawn") realApps[a.jobId] = (realApps[a.jobId]||0) + 1;
+    });
+  }
   list.sort(function(a,b){
     if(sort==="pay-high") return b.pay-a.pay;
     if(sort==="pay-low") return a.pay-b.pay;
     if(sort==="rating") return (b.rating||0)-(a.rating||0);
+    if(sort==="applied") return ((realApps[b.id]||0)-(realApps[a.id]||0)) || (a.posted-b.posted);
     if(sort==="match") return (matchScore(b)||0)-(matchScore(a)||0);
     if(sort==="deadline"){
       /* Closing soonest first: open listings by nearest deadline; ones
@@ -1615,7 +1727,26 @@ function renderJobs(){
     if(fresh.length && typeof renderAlerts==="function") renderAlerts();
   }
   if(!list.length){
-    $("jobGrid").innerHTML = '<div class="empty"><b>No work matches those filters yet.</b><br/>'+(state.savedOnly ? 'You haven\'t saved anything in this view — tap the ♥ on a listing to save it here.' : 'Try a different category or clear the search — new listings are added regularly. You can also ask the chat assistant to help.')+'</div>';
+    var emptyMsg, clearBtn = "";
+    if(state.savedOnly){
+      emptyMsg = "You haven't saved anything in this view — tap the ♥ on a listing to save it here.";
+    } else if(q || state.skill){
+      var bits = [];
+      if(q) bits.push("“" + esc(q) + "”");
+      if(state.skill) bits.push("the skill “" + esc(state.skill) + "”");
+      emptyMsg = "Nothing on the board matches " + bits.join(" with ") + " right now. Try a different word, or clear the search and skill filter to see the whole board again.";
+      clearBtn = '<br/><button type="button" class="btn btn-ghost btn-sm" style="margin-top:14px" data-clear-filters>Clear search &amp; skill filter</button>';
+    } else {
+      emptyMsg = "Try a different category or clear the search — new listings are added regularly. You can also ask the chat assistant to help.";
+    }
+    $("jobGrid").innerHTML = '<div class="empty"><b>No work matches those filters yet.</b><br/>' + emptyMsg + clearBtn + '</div>';
+    var cbBtn = $("jobGrid").querySelector("[data-clear-filters]");
+    if(cbBtn) cbBtn.addEventListener("click", function(){
+      $("fQ").value = "";
+      state.skill = null;
+      syncSkillFilter();
+      renderJobs();
+    });
     return;
   }
   $("jobGrid").innerHTML = list.map(function(j){
@@ -1635,7 +1766,7 @@ function renderJobs(){
       + ratingHtml(j)
       + (ms!==null ? '<div><span class="match-pill">'+ms+'% match for you</span></div>' : "")
       + '<div class="meta"><span>Duration <b>'+esc(j.dur)+'</b></span><span>Openings <b>'+j.openings+'</b></span><span>Applications <b>'+(j.apps||0)+'</b></span></div>'
-      + '<div class="skills">'+j.skills.map(function(s){return '<span class="skill">'+esc(s)+'</span>';}).join("")+'</div>'
+      + '<div class="skills">'+j.skills.map(function(s){ var on = state.skill && String(s).toLowerCase()===state.skill.toLowerCase(); return '<button type="button" class="skill'+(on?" on":"")+'" data-skill="'+esc(s)+'" aria-pressed="'+(on?"true":"false")+'" title="Show only listings that need '+esc(s)+'">'+esc(s)+'</button>'; }).join("")+'</div>'
       + '<p class="desc">'+esc(j.desc)+'</p>'
       + '<div class="deadline">'+(closed ? 'Closed — the apply-by date ('+esc(j.deadline)+') has passed' : 'Apply by: '+esc(deadlineLabel(j.deadline)))+' · '+postedAgo(j)+'</div>'
       + cardBars(j, ms)
@@ -1652,14 +1783,12 @@ function renderJobs(){
   Array.prototype.forEach.call(document.querySelectorAll("[data-apply]"),function(b){ b.addEventListener("click",function(){ openJob(b.getAttribute("data-apply"),true); }); });
   Array.prototype.forEach.call(document.querySelectorAll("[data-save]"),function(b){ b.addEventListener("click",function(){ toggleSave(b.getAttribute("data-save")); }); });
   Array.prototype.forEach.call(document.querySelectorAll("[data-report]"),function(b){ b.addEventListener("click",function(){ openJob(b.getAttribute("data-report"),false,true); }); });
-  /* animate the deadline / match bars to their real values now the cards
-     are in the DOM (fills render at width 0). Under prefers-reduced-motion
-     the page-wide CSS rule removes the transition, so the bars simply
-     appear at their final fill. */
-  var fills = $("jobGrid").querySelectorAll(".bar-fill");
-  requestAnimationFrame(function(){ requestAnimationFrame(function(){
-    Array.prototype.forEach.call(fills, function(f){ f.style.width = (f.getAttribute("data-w") || 0) + "%"; });
-  }); });
+  Array.prototype.forEach.call($("jobGrid").querySelectorAll("[data-skill]"),function(b){ b.addEventListener("click",function(){ setSkillFilter(b.getAttribute("data-skill")); }); });
+  /* animate the deadline / match bars as each card scrolls into view:
+     fills ease to their real values and the numbers beside them count
+     up in step. Under prefers-reduced-motion they appear at their
+     final fill and value immediately. */
+  animateBars($("jobGrid"));
   /* premium layer hooks (defined in the last script block; guarded so
      early renders before that block loads are unaffected) */
   if(typeof renderTicker==="function") renderTicker();
@@ -1717,7 +1846,17 @@ function toggleSave(id){
 
 /* ---------- trending ---------- */
 function renderTrending(){
-  var top = JOBS.slice().sort(function(a,b){ return (b.apps||0)-(a.apps||0); }).slice(0,5);
+  /* Trending ranks by REAL submissions only: count the application records
+     per listing (excluding Withdrawn) — the same real count the hero
+     counter, Board stats and the "Most applied" sort use. The per-listing
+     "apps" field is never used to rank here: on sample listings it holds
+     labelled example numbers, not applications anyone actually submitted.
+     Ties break newest-first ("posted" counts days ago, so smaller = newer). */
+  var realApps = {};
+  state.applications.forEach(function(a){
+    if(a.status !== "Withdrawn") realApps[a.jobId] = (realApps[a.jobId]||0) + 1;
+  });
+  var top = JOBS.slice().sort(function(a,b){ return ((realApps[b.id]||0)-(realApps[a.id]||0)) || (a.posted-b.posted); }).slice(0,5);
   $("trendRail").innerHTML = top.map(function(j,i){
     return '<button type="button" class="trend" data-trend="'+j.id+'"><img src="'+esc(j.img||CAT_IMGS[j.cat])+'" alt="'+esc(j.cat)+' work — '+esc(j.title)+'" loading="lazy" /><span class="tbody"><span class="rank">#' + (i+1) + ' · ' + (j.apps||0) + ' applied</span><b>'+esc(j.title)+'</b><span>'+esc(j.org)+' · '+inr(j.pay)+' '+esc(j.unit)+'</span></span></button>';
   }).join("");
@@ -2050,6 +2189,12 @@ $("alertAdd").addEventListener("click", function(){
 
 /* ---------- filters & search wiring ---------- */
 ["fQ","fType","fLoc","fBudget","fSort"].forEach(function(id){ $(id).addEventListener("input", renderJobs); $(id).addEventListener("change", renderJobs); });
+$("skillClear").addEventListener("click", function(){
+  state.skill = null;
+  syncSkillFilter();
+  renderJobs();
+});
+syncSkillFilter();
 function syncSavedToggle(){
   var b = $("savedToggle");
   b.classList.toggle("on", state.savedOnly);
