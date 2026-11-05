@@ -508,11 +508,65 @@ select.status-sel{border:1px solid var(--line);border-radius:8px;padding:8px 9px
 .stat-box .snone{font-size:13px;color:var(--muted)}
 @media(max-width:1020px){.stat-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:560px){.stat-grid{grid-template-columns:1fr}}
+
+/* ---------- premium layer: announcement ticker, compact header, hero word reveal, stats band, showcase tiles ---------- */
+.ticker{background:var(--green-deep-2);color:#C7D5E8;overflow:hidden;max-height:40px;transition:max-height .35s ease,opacity .3s ease}
+.ticker-track{display:inline-flex;white-space:nowrap;padding:9px 0;animation:tickmove 42s linear infinite;will-change:transform}
+.ticker:hover .ticker-track{animation-play-state:paused}
+.ticker-set{display:inline-flex;align-items:center}
+.ticker-item{font-size:12.5px;font-weight:600;letter-spacing:.02em;padding:0 16px}
+.ticker-item b{color:#D8B989;font-weight:700;font-family:"Poppins",sans-serif}
+.ticker-dot{color:#C5A880;font-size:9px}
+@keyframes tickmove{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+header.site .hbar{transition:padding .3s ease}
+header.site .logo{position:relative;transition:font-size .3s ease}
+header.site .logo::after{content:"";position:absolute;left:0;bottom:-4px;height:2.5px;width:100%;border-radius:2px;background:linear-gradient(90deg,#C5A880,#D8B989);transform:scaleX(0);transform-origin:left center;transition:transform .5s ease}
+header.site.compact{background:var(--green-deep);border-bottom-color:rgba(197,168,128,.4);box-shadow:0 12px 30px rgba(10,26,48,.35)}
+header.site.compact .ticker{max-height:0;opacity:0}
+header.site.compact .hbar{padding:7px 0}
+header.site.compact .logo{color:#fff;font-size:20px}
+header.site.compact .logo span{color:#A8B8CC}
+header.site.compact .logo::after{transform:scaleX(1)}
+header.site.compact nav.main a{color:#D7E3F2}
+header.site.compact nav.main a:hover{color:#fff}
+header.site.compact .count-dot{background:#C5A880;color:#0F2340}
+header.site.compact #menuBtn{border-color:rgba(255,255,255,.45);color:#fff}
+@media(max-width:640px){
+  header.site.compact nav.main{background:var(--surface);box-shadow:var(--shadow)}
+  header.site.compact nav.main a{color:var(--body)}
+  header.site.compact nav.main a:hover{color:var(--green-d)}
+}
+.hero h1 .hw{display:inline-block}
+.hero h1 .hw.pre{opacity:0;transform:translateY(16px)}
+.hero h1.words-in .hw{animation:wordUp .6s cubic-bezier(.22,.68,.26,1) forwards;animation-delay:calc(var(--i,0)*75ms)}
+@keyframes wordUp{to{opacity:1;transform:translateY(0)}}
+.stats-band{background:linear-gradient(120deg,#0A1A30 0%,#0F2340 55%,#1E3D66 100%);color:#fff;padding:32px 0 28px}
+.stats-grid-band{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.band-stat{border-left:3px solid rgba(197,168,128,.55);padding-left:16px}
+.band-stat b{font-family:"Poppins",sans-serif;font-size:clamp(30px,4vw,44px);font-weight:800;color:#D8B989;display:block;line-height:1.05}
+.band-stat span{color:#A8B8CC;font-size:13px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+.band-note{color:#7E93AD;font-size:12.5px;margin-top:18px}
+@media(max-width:640px){.stats-grid-band{grid-template-columns:repeat(2,1fr);gap:16px}}
+.tile{aspect-ratio:16/10.5}
+.tile::after{background:linear-gradient(180deg,rgba(10,26,48,.08) 30%,rgba(10,26,48,.9) 88%)}
+.tile .tname{top:auto;bottom:34px;font-size:21px}
+.tile .tcount{top:auto;bottom:12px}
+.tile .tgo{position:absolute;top:12px;right:12px;z-index:2;width:30px;height:30px;border-radius:50%;background:rgba(15,35,64,.55);color:#D8B989;display:grid;place-items:center;font-size:16px;font-weight:700;transition:background .2s ease,color .2s ease,transform .2s ease}
+.tile:hover .tgo{background:#C5A880;color:#0F2340;transform:translateX(2px)}
+.tile::before{content:"";position:absolute;left:0;right:0;bottom:0;height:3px;background:linear-gradient(90deg,#C5A880,#D8B989);transform:scaleX(0);transform-origin:left center;transition:transform .35s ease;z-index:3}
+.tile:hover::before,.tile.on::before{transform:scaleX(1)}
+@media (prefers-reduced-motion: reduce){
+  .ticker-track{animation:none}
+  .hero h1 .hw.pre{opacity:1;transform:none}
+}
 </style>
 </head>
 <body>
 
 <header class="site">
+  <div class="ticker" id="ticker" aria-label="Latest updates from the board">
+    <div class="ticker-track" id="tickerTrack"></div>
+  </div>
   <div class="wrap hbar">
     <a class="logo" href="#top">VishiTalentHub<i>.</i><span>PLACEMENTS · INTERNSHIPS · STUDENT WORK</span></a>
     <button id="menuBtn" aria-label="Open menu" aria-expanded="false">Menu</button>
@@ -560,10 +614,21 @@ select.status-sel{border:1px solid var(--line);border-radius:8px;padding:8px 9px
     </div>
   </div>
 
+  <!-- STATS BAND — real counts from the board only -->
+  <section class="stats-band" aria-label="VishiTalentHub in numbers">
+    <div class="wrap stats-grid-band">
+      <div class="band-stat"><b id="bandOpen">–</b><span>Open listings</span></div>
+      <div class="band-stat"><b id="bandApps">–</b><span>Applications received</span></div>
+      <div class="band-stat"><b id="bandCats">–</b><span>Work categories</span></div>
+      <div class="band-stat"><b id="bandVerified">–</b><span>Verified listings</span></div>
+    </div>
+    <p class="band-note wrap">Counts come straight from this board and update as listings and applications change. Applications counted are real submissions only.</p>
+  </section>
+
   <div class="wrap">
     <!-- CATEGORIES -->
     <section class="block" id="categories" style="padding-top:44px">
-      <div class="sec-head"><h2>Browse by category</h2></div>
+      <div class="sec-head"><h2>Find work by category</h2></div>
       <p class="sec-sub">Start from what you're good at. Tap a category to see only that kind of work.</p>
       <div class="tiles" id="tiles"></div>
     </section>
@@ -1166,6 +1231,7 @@ create policy "students withdraw own applications" on public.applications
     <div>
       <b>VishiTalentHub.</b>
       <p style="margin:0;line-height:1.7">A student-first marketplace for internships, freelance gigs and part-time work. Browse free, apply free, and get tracked support on WhatsApp.</p>
+      <button type="button" class="flink" id="footAlerts" style="color:#D8B989;font-weight:700;margin-top:10px">Get new gig alerts →</button>
     </div>
     <div>
       <b>Categories</b>
@@ -1341,9 +1407,9 @@ function renderCats(){
   });
   $("tiles").innerHTML = CATEGORIES.slice(1).map(function(c){
     if(c==="Other"){
-      return '<button class="tile tile-plain'+(state.cat==="Other"?" on":"")+'" data-tilecat="Other"><span class="tname">Other</span><span class="tcount">Everything else · '+catCount("Other")+' open</span></button>';
+      return '<button class="tile tile-plain'+(state.cat==="Other"?" on":"")+'" data-tilecat="Other"><span class="tgo" aria-hidden="true">→</span><span class="tname">Other</span><span class="tcount">Everything else · '+catCount("Other")+' open</span></button>';
     }
-    return '<button class="tile'+(state.cat===c?" on":"")+'" data-tilecat="'+esc(c)+'"><img src="'+CAT_IMGS[c]+'" alt="'+esc(c)+' work — '+esc(CAT_TAG[c])+'" loading="lazy" /><span class="tname">'+esc(c)+'</span><span class="tcount">'+esc(CAT_TAG[c])+' · '+catCount(c)+' open</span></button>';
+    return '<button class="tile'+(state.cat===c?" on":"")+'" data-tilecat="'+esc(c)+'"><img src="'+CAT_IMGS[c]+'" alt="'+esc(c)+' work — '+esc(CAT_TAG[c])+'" loading="lazy" /><span class="tgo" aria-hidden="true">→</span><span class="tname">'+esc(c)+'</span><span class="tcount">'+esc(CAT_TAG[c])+' · '+catCount(c)+' open</span></button>';
   }).join("");
   Array.prototype.forEach.call(document.querySelectorAll("[data-tilecat]"),function(b){
     b.addEventListener("click",function(){ setCat(b.getAttribute("data-tilecat"), true); });
@@ -1528,6 +1594,10 @@ function renderJobs(){
   Array.prototype.forEach.call(document.querySelectorAll("[data-apply]"),function(b){ b.addEventListener("click",function(){ openJob(b.getAttribute("data-apply"),true); }); });
   Array.prototype.forEach.call(document.querySelectorAll("[data-save]"),function(b){ b.addEventListener("click",function(){ toggleSave(b.getAttribute("data-save")); }); });
   Array.prototype.forEach.call(document.querySelectorAll("[data-report]"),function(b){ b.addEventListener("click",function(){ openJob(b.getAttribute("data-report"),false,true); }); });
+  /* premium layer hooks (defined in the last script block; guarded so
+     early renders before that block loads are unaffected) */
+  if(typeof renderTicker==="function") renderTicker();
+  if(typeof renderBand==="function") renderBand();
 }
 /* ---------- animated hero counters (real counts only) ---------- */
 var statTargets = {}, statDone = {}, statVisible = false;
@@ -2994,6 +3064,125 @@ $("sbRetryBtn").addEventListener("click", function(){
 });
 
 sbInit();
+</script>
+
+<script>
+/* ================= premium layer: ticker, compact header, hero words, stats band, footer alerts =================
+   Everything here reads the site's real data (JOBS, state.applications)
+   through the same helpers the rest of the page uses — no invented numbers. */
+var tickerSig = "";
+function renderTicker(){
+  var track = document.getElementById("tickerTrack"); if(!track) return;
+  var open = JOBS.filter(function(j){ return !isClosed(j); });
+  var items = [];
+  items.push("<b>"+open.length+"</b>&nbsp;open listings on the board right now");
+  JOBS.filter(function(j){ var du = daysUntil(j.deadline); return du !== null && du >= 0 && du <= 5; })
+    .sort(function(a,b){ return daysUntil(a.deadline) - daysUntil(b.deadline); })
+    .slice(0,3)
+    .forEach(function(j){
+      var du = daysUntil(j.deadline);
+      items.push("Closing soon: <b>"+esc(j.title)+"</b> — "+(du===0 ? "closes today" : "closes in "+du+" day"+(du===1?"":"s")));
+    });
+  open.filter(function(j){ return (j.posted||0) <= 2; }).slice(0,3)
+    .forEach(function(j){
+      items.push("Just posted: <b>"+esc(j.title)+"</b> at "+esc(j.org)+" · "+inr(j.pay)+" "+esc(j.unit));
+    });
+  var ver = JOBS.filter(function(j){ return j.verified && !isClosed(j); }).length;
+  if(ver) items.push("<b>"+ver+"</b> owner-verified listing"+(ver===1?"":"s")+" live now");
+  var sig = items.join("|");
+  if(sig === tickerSig) return;
+  tickerSig = sig;
+  var set = items.map(function(t){ return '<span class="ticker-item">'+t+'</span><span class="ticker-dot" aria-hidden="true">◆</span>'; }).join("");
+  track.innerHTML = '<span class="ticker-set">'+set+'</span><span class="ticker-set" aria-hidden="true">'+set+'</span>';
+  var chars = track.textContent.length;
+  track.style.animationDuration = Math.max(22, Math.round(chars * 0.16)) + "s";
+}
+/* stats band — real counts only, counted up with the hero stats' system */
+var bandVisible = false;
+function setBandTarget(id, val){
+  statTargets[id] = val;
+  var el = document.getElementById(id); if(!el) return;
+  if(statDone[id]){ el.textContent = val; return; }
+  if(bandVisible) animateStat(id);
+}
+function renderBand(){
+  setBandTarget("bandOpen", JOBS.filter(function(j){ return !isClosed(j); }).length);
+  setBandTarget("bandApps", state.applications.filter(function(a){ return a.status !== "Withdrawn"; }).length);
+  setBandTarget("bandCats", CATEGORIES.length - 1);
+  setBandTarget("bandVerified", JOBS.filter(function(j){ return j.verified && !isClosed(j); }).length);
+}
+(function(){
+  var band = document.querySelector(".stats-band");
+  if(band && "IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(en){
+      if(en[0].isIntersecting){
+        bandVisible = true;
+        ["bandOpen","bandApps","bandCats","bandVerified"].forEach(function(id){
+          if(statTargets[id] !== undefined) animateStat(id);
+        });
+        io.disconnect();
+      }
+    }, { threshold:.3 });
+    io.observe(band);
+  } else { bandVisible = true; }
+})();
+/* compact header on scroll: shorter bar, solid navy, gold wordmark sweep */
+(function(){
+  var hdr = document.querySelector("header.site"); if(!hdr) return;
+  var queued = false;
+  function apply(){ hdr.classList.toggle("compact", window.scrollY > 30); queued = false; }
+  window.addEventListener("scroll", function(){
+    if(!queued){ queued = true; requestAnimationFrame(apply); }
+  }, { passive:true });
+  apply();
+})();
+/* hero headline: word-by-word reveal, key word keeps its gold <em>.
+   Skipped entirely when the user prefers reduced motion. */
+(function(){
+  var h1 = document.querySelector(".hero h1"); if(!h1) return;
+  if(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  var idx = 0;
+  var nodes = Array.prototype.slice.call(h1.childNodes);
+  h1.innerHTML = "";
+  function addWord(word, parent){
+    var s = document.createElement("span");
+    s.className = "hw pre";
+    s.style.setProperty("--i", idx++);
+    s.textContent = word;
+    parent.appendChild(s);
+    parent.appendChild(document.createTextNode(" "));
+  }
+  nodes.forEach(function(n){
+    if(n.nodeType === 3){
+      n.textContent.split(/\s+/).filter(Boolean).forEach(function(w){ addWord(w, h1); });
+    } else if(n.nodeType === 1){
+      var s = document.createElement("span");
+      s.className = "hw pre";
+      s.style.setProperty("--i", idx++);
+      s.appendChild(n);
+      h1.appendChild(s);
+      h1.appendChild(document.createTextNode(" "));
+    }
+  });
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){ h1.classList.add("words-in"); });
+  });
+})();
+/* footer: "Get new gig alerts" opens the existing Alerts & Reminders panel */
+(function(){
+  var b = document.getElementById("footAlerts"); if(!b) return;
+  b.addEventListener("click", function(){
+    var reduced = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var act = document.getElementById("activity");
+    if(act) act.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block:"start" });
+    setTimeout(function(){
+      var sel = document.getElementById("alertCat");
+      if(sel) sel.focus({ preventScroll:true });
+    }, reduced ? 60 : 650);
+  });
+})();
+renderTicker();
+renderBand();
 </script>
 </body>
 </html>
